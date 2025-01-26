@@ -6,12 +6,14 @@
 ## Terraform Bedrock Knowledge Base Project Documentation
 ![Diagram Terraform Flow](/docs/terraform_flow.png)
 
-This Terraform project automates the creation of an AWS Bedrock Knowledge Base infrastructure. It includes:
+This Terraform project automates the creation of infrastructure for an AWS Bedrock Knowledge Base, simplifying its implementation as a module in more complex projects to accelerate deployment. It includes:
 - **Knowledge Base**: Configured with RDS for storage and S3 for data sources.
 - **IAM Roles and Policies**: Ensures secure access to AWS services.
 - **Lambda Functions**: Automates database initialization.
 - **RDS Aurora Serverless**: Hosts structured data for vector knowledge base configuration.
 - **S3 Bucket**: Stores data for ingestion into the knowledge base.
+
+![Diagram AWS Knowledge Base with the Aurora Serverless Architecture](/docs/aws_architecture.png)
 
 ## Lambda Function for Executing SQL Commands on Aurora Serverless
 ![Diagram Database Init Lambda Function Flow](/docs/lambda_database_init.png)
@@ -80,8 +82,25 @@ terraform plan
 ```bash
 terraform apply
 ```
+## How to Delete the Infrastructure
+
+Do not forget to clean up your cloud environment after use to avoid unexpected charges:
+
+Open your terminal in the `terraform/` directory and run the command `terraform destroy`.
 
 ## Notes
+
 - Ensure all input variables are properly defined in a ``terraform/.tfvars`` file or passed during execution.
 - The RDS database credentials are securely stored in AWS Secrets Manager.
 - The S3 bucket must contain data files to be ingested into the knowledge base.
+
+## References
+The following sources were consulted for the creation of this project:
+- AWS Documentation for similar projects:
+    - How to create a Knowledge Base in Aurora Serverless: [click here](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraPostgreSQL.VectorDB.html)
+    - How to create a Knowledge Base in Aurora Serverless using the console: [click here](https://aws.amazon.com/blogs/database/accelerate-your-generative-ai-application-development-with-amazon-bedrock-knowledge-bases-quick-create-and-amazon-aurora-serverless/)
+    - How to create a Knowledge Base using Terraform: [click here](https://aws.amazon.com/blogs/infrastructure-and-automation/build-an-automated-deployment-of-generative-ai-with-agent-lifecycle-changes-using-terraform/)
+- Terraform Documentation for the `aws_bedrockagent_knowledge_base` resource: [click here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/bedrockagent_knowledge_base)
+- Terraform Documentation for the `aws_bedrockagent_data_source` resource: [click here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/bedrockagent_data_source)
+- Terraform Documentation for the `aws_rds_cluster` resource: [click here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/rds_cluster)
+- Terraform Documentation for the `aws_rds_cluster_instance` resource: [click here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/rds_cluster_instance)

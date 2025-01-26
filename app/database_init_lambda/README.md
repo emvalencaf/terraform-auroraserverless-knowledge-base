@@ -5,9 +5,9 @@
 
 ![Diagram Database Init Lambda Function Flow](/docs/lambda_database_init.png)
 
-This Lambda function is responsible for executing SQL commands on an Amazon Aurora Serverless database using the AWS RDS Data API. The function leverages the ``boto3`` library to interact with Aurora Serverless and perform various database operations.
+This Lambda function is responsible for executing SQL commands on an Amazon Aurora Serverless database using the AWS RDS Data API. The function leverages the ``boto3`` library to interact with Aurora Serverless and perform various database operations in order to create vector database.
 
-The primary function f this function is to setting up a vector database at a potsgres
+The primary function f this function is to setting up a vector database.
 
 ## Summary
 
@@ -102,6 +102,9 @@ def get_sql_commands(schema_name: str,
             {text_field} text,  -- Column for related text data
             {metadata_field} json  -- Column for additional metadata in JSON format
         );
+        """,
+        f"""
+        CREATE INDEX ON {schema_name}.{table_name} USING hnsw (embedding vector_cosine_ops) WITH (ef_construction=256);
         """
     ]
     
