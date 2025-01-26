@@ -19,6 +19,8 @@ def get_sql_commands(schema_name: str,
        - **Text Field (`text_field`)**: A text column to store chunks of data.
        - **Metadata Field (`metadata_field`)**: A JSON column to store additional metadata for each record.
 
+    Read Aurora Postgres PgVector: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraPostgreSQL.VectorDB.html
+    
     Parameters:
         schema_name (str): The name of the schema to create or verify.
         table_name (str): The name of the table to create or verify within the schema.
@@ -44,11 +46,14 @@ def get_sql_commands(schema_name: str,
         f"CREATE SCHEMA IF NOT EXISTS {schema_name};", 
         f"""
         CREATE TABLE IF NOT EXISTS {schema_name}.{table_name} (
-            {primary_key_field} uuid PRIMARY KEY,  -- Unique identifier for each record
-            {vector_field} vector({dimensional_embedding}),  -- Vector field for storing embeddings
-            {text_field} text,  -- Column for related text data
-            {metadata_field} json  -- Column for additional metadata in JSON format
+            {primary_key_field} uuid PRIMARY KEY,
+            {vector_field} vector({dimensional_embedding}),
+            {text_field} text,
+            {metadata_field} json
         );
+        """,
+        f"""
+        CREATE INDEX ON {schema_name}.{table_name} USING hnsw (embedding vector_cosine_ops) WITH (ef_construction=256);
         """
     ]
     
